@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$WASABI -- Stay Spicy. Print Money. Melt Faces.</title>
+  <meta name="description" content="The spiciest meme coin on Solana. $WASABI -- Stay Spicy. Print Money. Melt Faces." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="fire-canvas"></canvas>
+
+  <div id="spicy-meter">
+    <div id="spicy-mascot-icon">MILD</div>
+    <div id="spicy-meter-track">
+      <div id="spicy-meter-fill"></div>
+    </div>
+    <div id="spicy-label-text">SPICY-O-METER</div>
+  </div>
+
+  <section id="hero">
+    <div id="hero-bg"></div>
+    <div id="hero-content">
+      <div id="mascot-container">
+        <img id="mascot" src="assets/logo.png" alt="Wasabi mascot" />
+        <div class="eye" id="eye-left"><div class="pupil"></div></div>
+        <div class="eye" id="eye-right"><div class="pupil"></div></div>
+      </div>
+      <h1 id="tagline">STAY $PICY.<br/>PRINT MONEY.<br/>MELT FACES.</h1>
+      <div id="ca-box">
+        <span id="ca-label">CONTRACT ADDRESS</span>
+        <div id="ca-row">
+          <code id="ca-text">DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump</code>
+          <button id="copy-btn" onclick="copyCA()">COPY</button>
+        </div>
+      </div>
+      <div id="hero-buttons">
+        <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" class="btn btn-primary">BUY $WASABI</a>
+        <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" class="btn btn-secondary">JOIN TELEGRAM</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <p id="about-tagline">Wasabi isn't just a condiment.<br/>It's a lifestyle. It burns. It heals.<br/><strong>It makes you rich.</strong></p>
+    <div id="stat-cards">
+      <div class="stat-card">
+        <span class="stat-title">100% Community</span>
+        <span class="stat-desc">No team tokens. No VC bags. Pure degens.</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Zero Tax</span>
+        <span class="stat-desc">Buy. Sell. Keep everything. No cuts.</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Solana Speed</span>
+        <span class="stat-desc">Sub-second transactions. Built for degens.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-to-buy">
+    <h2>HOW TO BUY</h2>
+    <div id="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Get SOL</h3>
+        <p>Buy SOL on Coinbase, Binance, or any exchange.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Get Phantom</h3>
+        <p>Download Phantom Wallet at phantom.app and create a wallet.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Swap on Raydium</h3>
+        <p>Go to raydium.io, paste the CA, and swap SOL for $WASABI.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>WAGMI</h3>
+        <p>Welcome to the spicy side. You are now dangerously based.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="melt-section">
+    <h2>THINK YOU CAN HANDLE IT?</h2>
+    <button id="melt-btn" onclick="meltFace()">MELT MY FACE</button>
+    <div id="melt-msg"></div>
+  </section>
+
+  <section id="slot-section">
+    <h2>WASABI WISDOM</h2>
+    <p class="slot-sub">Spin for your daily prophecy</p>
+    <div id="slot-machine">
+      <div class="reel-window"><div class="reel" id="reel-1"></div></div>
+      <div class="reel-window"><div class="reel" id="reel-2"></div></div>
+      <div class="reel-window"><div class="reel" id="reel-3"></div></div>
+    </div>
+    <button id="spin-btn" onclick="spinSlot()">SPIN</button>
+    <a id="share-btn" href="#" target="_blank" style="display:none">SHARE ON TWITTER</a>
+  </section>
+
+  <footer id="footer">
+    <img src="assets/logo.png" alt="Wasabi" id="footer-logo" />
+    <p id="footer-tagline">$WASABI -- Stay Spicy.</p>
+    <div id="socials">
+      <a href="https://x.com/wasabicheesesol" target="_blank" class="social-link">Twitter / X</a>
+      <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" class="social-link">Telegram</a>
+      <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" class="social-link">Dexscreener</a>
+    </div>
+    <div id="footer-ca">
+      <code>DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump</code>
+      <button onclick="copyCA()">COPY</button>
+    </div>
+    <p id="disclaimer">Not financial advice. Just spicy vibes.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
