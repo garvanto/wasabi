@@ -40,7 +40,11 @@
       <div id="mascot-container">
         <img id="mascot" src="assets/logo.png" alt="Wasabi mascot" />
       </div>
-      <h1 id="tagline">STAY $PICY.<br/>PRINT MONEY.<br/>MELT FACES.</h1>
+      <h1 id="tagline">STAY SPICY.<br/>PRINT MONEY.<br/>MELT FACES.</h1>
+      <a href="#about" id="scroll-hint" aria-label="Scroll down">
+        <span id="scroll-hint-text">SCROLL</span>
+        <span id="scroll-hint-arrow"></span>
+      </a>
       <div id="ca-box">
         <span id="ca-label">CONTRACT ADDRESS</span>
         <div id="ca-row">
@@ -55,27 +59,66 @@
     </div>
   </section>
 
+  <!-- TICKER -->
+  <div id="ticker-wrap" aria-hidden="true">
+    <div id="ticker-track">
+      <span>STAY SPICY</span><span class="tick-sep">•</span>
+      <span>0% TAX</span><span class="tick-sep">•</span>
+      <span>COMMUNITY OWNED</span><span class="tick-sep">•</span>
+      <span>SOLANA NATIVE</span><span class="tick-sep">•</span>
+      <span>LP BURNED</span><span class="tick-sep">•</span>
+      <span>NO TEAM TOKENS</span><span class="tick-sep">•</span>
+      <span>BUY $WASABI</span><span class="tick-sep">•</span>
+      <span>STAY SPICY</span><span class="tick-sep">•</span>
+      <span>0% TAX</span><span class="tick-sep">•</span>
+      <span>COMMUNITY OWNED</span><span class="tick-sep">•</span>
+      <span>SOLANA NATIVE</span><span class="tick-sep">•</span>
+      <span>LP BURNED</span><span class="tick-sep">•</span>
+      <span>NO TEAM TOKENS</span><span class="tick-sep">•</span>
+      <span>BUY $WASABI</span><span class="tick-sep">•</span>
+    </div>
+  </div>
+
   <!-- ABOUT -->
-  <section id="about">
-    <p id="about-tagline">Wasabi isn't just a condiment.<br/>It's a lifestyle. It burns. It heals.<br/><strong>It makes you rich.</strong></p>
+  <section id="about" class="reveal">
+    <p id="about-tagline">Not your grandma's condiment.<br/>This one doesn't sit on the shelf.<br/><strong>It prints money.</strong></p>
     <div id="stat-cards">
       <div class="stat-card">
-        <span class="stat-title">100% Community</span>
-        <span class="stat-desc">No team tokens. No VC bags. Pure degens.</span>
+        <span class="stat-title">No Team. No VCs.</span>
+        <span class="stat-desc">Built by the streets. Owned by the streets. Every token is in your hands.</span>
       </div>
       <div class="stat-card">
-        <span class="stat-title">Zero Tax</span>
-        <span class="stat-desc">Buy. Sell. Keep everything. No cuts.</span>
+        <span class="stat-title">0/0 Tax</span>
+        <span class="stat-desc">Buy. Sell. Keep every dollar. Zero cuts. Zero excuses.</span>
       </div>
       <div class="stat-card">
-        <span class="stat-title">Solana Speed</span>
-        <span class="stat-desc">Sub-second transactions. Built for degens.</span>
+        <span class="stat-title">Instant Execution</span>
+        <span class="stat-desc">Sub-second swaps on Solana. By the time you blink, you're in.</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">LP Burned</span>
+        <span class="stat-desc">Liquidity locked forever. No rug. No exit. We're all in this together.</span>
       </div>
     </div>
   </section>
 
+  <!-- WHY WASABI -->
+  <section id="why-section" class="reveal">
+    <div id="why-inner">
+      <h2 id="why-title">WHY $WASABI?</h2>
+      <p id="why-sub">Because mild is for tourists.</p>
+      <div id="why-lines">
+        <div class="why-line"><span class="why-num">01</span><p>This isn't a project. It's a force of nature. You don't invest in wasabi — you survive it.</p></div>
+        <div class="why-line"><span class="why-num">02</span><p>No roadmap. No promises. No VCs waiting to dump on you. Just the community and the chart.</p></div>
+        <div class="why-line"><span class="why-num">03</span><p>The market is a casino. $WASABI is the house. And the house always burns.</p></div>
+        <div class="why-line"><span class="why-num">04</span><p>Solana speed. Zero tax. Fair launch. Everything the blue chips wish they were.</p></div>
+      </div>
+      <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="why-cta">I'M READY. BUY NOW.</a>
+    </div>
+  </section>
+
   <!-- HOW TO BUY -->
-  <section id="how-to-buy">
+  <section id="how-to-buy" class="reveal">
     <h2>HOW TO BUY</h2>
     <div id="steps">
       <div class="step">
@@ -101,10 +144,38 @@
     </div>
   </section>
 
+  <!-- TOKENOMICS -->
+  <section id="tokenomics" class="reveal">
+    <h2 id="tknx-title">TOKENOMICS</h2>
+    <p id="tknx-sub">Simple. Clean. Deadly.</p>
+    <div id="tknx-grid">
+      <div class="tknx-card">
+        <span class="tknx-val">1,000,000,000</span>
+        <span class="tknx-label">TOTAL SUPPLY</span>
+      </div>
+      <div class="tknx-card">
+        <span class="tknx-val">0%</span>
+        <span class="tknx-label">BUY TAX</span>
+      </div>
+      <div class="tknx-card">
+        <span class="tknx-val">0%</span>
+        <span class="tknx-label">SELL TAX</span>
+      </div>
+      <div class="tknx-card">
+        <span class="tknx-val">BURNED</span>
+        <span class="tknx-label">LIQUIDITY</span>
+      </div>
+      <div class="tknx-card">
+        <span class="tknx-val">FAIR</span>
+        <span class="tknx-label">LAUNCH</span>
+      </div>
+    </div>
+  </section>
+
   <!-- COMMUNITY -->
-  <section id="community">
+  <section id="community" class="reveal">
     <h2>JOIN THE COMMUNITY</h2>
-    <p id="community-sub">The spiciest community on Solana. Come in.</p>
+    <p id="community-sub">The most dangerous community on Solana. We don't bite. We burn.</p>
     <div id="community-cards">
       <a href="https://x.com/wasabicheesesol" target="_blank" rel="noopener noreferrer" class="community-card" id="card-x">
         <div class="community-card-icon">X</div>
@@ -134,8 +205,12 @@
   </section>
 
   <!-- MELT MY FACE -->
-  <section id="melt-section">
-    <h2>THINK YOU CAN HANDLE IT?</h2>
+  <section id="melt-section" class="reveal">
+    <h2>WARNING: DO NOT PRESS THIS BUTTON</h2>
+    <div id="melt-counter-wrap">
+      <span id="melt-counter-num">69,420</span>
+      <span id="melt-counter-label">FACES MELTED</span>
+    </div>
     <button id="melt-btn" onclick="meltFace()">MELT MY FACE</button>
     <div id="melt-msg"></div>
   </section>

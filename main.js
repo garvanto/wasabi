@@ -158,6 +158,10 @@ function meltFace() {
   clearTimeout(meltTimeout);
   clearTimeout(meltCleanupTimeout);
 
+  meltCount++;
+  localStorage.setItem('meltCount', meltCount);
+  updateMeltDisplay();
+
   const msg = document.getElementById('melt-msg');
 
   document.body.classList.remove('shake');
@@ -195,4 +199,22 @@ function meltFace() {
   }, 3000);
 }
 updateSpicyMeter();
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// Faces melted counter
+let meltCount = parseInt(localStorage.getItem('meltCount') || '69420', 10);
+function updateMeltDisplay() {
+  document.getElementById('melt-counter-num').textContent = meltCount.toLocaleString();
+}
+updateMeltDisplay();
 
