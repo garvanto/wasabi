@@ -100,8 +100,11 @@ body {
 #hero-bg {
   position: absolute;
   inset: 0;
-  background: url('assets/banner.jpg') center/cover no-repeat;
-  filter: brightness(0.35) saturate(1.4);
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(111,255,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(255,107,0,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 80%, rgba(57,255,20,0.05) 0%, transparent 50%),
+    linear-gradient(160deg, #0a0a0a 0%, #080808 50%, #0d0800 100%);
   z-index: 0;
 }
 
