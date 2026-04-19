@@ -48,10 +48,50 @@ window.addEventListener('mousemove', (e) => {
   }
 });
 
+class Ember {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * window.innerWidth;
+    this.y = window.innerHeight + 10;
+    this.size = Math.random() * 3 + 1;
+    this.speedY = -(Math.random() * 1.5 + 0.5);
+    this.speedX = (Math.random() - 0.5) * 0.8;
+    this.life = 1;
+    this.decay = Math.random() * 0.004 + 0.002;
+    const colors = ['#6FFF00', '#39FF14', '#FFD700'];
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  update() {
+    this.x += this.speedX + Math.sin(Date.now() * 0.001 + this.x) * 0.3;
+    this.y += this.speedY;
+    this.life -= this.decay;
+    if (this.life <= 0 || this.y < -10) this.reset();
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.life * 0.6;
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const embers = Array.from({ length: 40 }, () => new Ember());
+
 function animateAll() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles = particles.filter(p => p.life > 0);
   particles.forEach(p => { p.update(); p.draw(); });
+  embers.forEach(e => { e.update(); e.draw(); });
   requestAnimationFrame(animateAll);
 }
 animateAll();
