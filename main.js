@@ -110,11 +110,6 @@ function copyCA() {
   }).catch(() => {});
 }
 
-const siteHeader = document.getElementById('site-header');
-window.addEventListener('scroll', () => {
-  siteHeader.classList.toggle('visible', window.scrollY > 80);
-}, { passive: true });
-
 const meterFill = document.getElementById('spicy-meter-fill');
 const spicyMascot = document.getElementById('spicy-mascot-icon');
 
