@@ -1,3 +1,118 @@
+// ── Deco canvas (cheese + chili) ──
+const decoCanvas = document.getElementById('deco-canvas');
+const dctx = decoCanvas.getContext('2d');
+
+function resizeDeco() {
+  decoCanvas.width = window.innerWidth;
+  decoCanvas.height = window.innerHeight;
+}
+resizeDeco();
+window.addEventListener('resize', resizeDeco);
+
+function drawCheese(cx, x, y, size, rot) {
+  cx.save();
+  cx.translate(x, y);
+  cx.rotate(rot);
+  // wedge body
+  cx.beginPath();
+  cx.moveTo(0, -size);
+  cx.lineTo(size * 0.85, size * 0.55);
+  cx.arcTo(size * 0.85, size * 0.7, -size * 0.85, size * 0.7, size * 0.18);
+  cx.lineTo(-size * 0.85, size * 0.55);
+  cx.closePath();
+  cx.fillStyle = '#F5C518';
+  cx.fill();
+  cx.strokeStyle = '#D4A017';
+  cx.lineWidth = size * 0.06;
+  cx.stroke();
+  // holes
+  [[0.15, 0.05], [-0.28, 0.28], [0.35, 0.35]].forEach(([hx, hy]) => {
+    cx.beginPath();
+    cx.arc(hx * size, hy * size, size * 0.11, 0, Math.PI * 2);
+    cx.fillStyle = '#C8960C';
+    cx.fill();
+  });
+  cx.restore();
+}
+
+function drawChili(cx, x, y, size, rot) {
+  cx.save();
+  cx.translate(x, y);
+  cx.rotate(rot);
+  // body
+  cx.beginPath();
+  cx.moveTo(0, -size * 0.5);
+  cx.bezierCurveTo(size * 0.45, -size * 0.3, size * 0.55, size * 0.4, size * 0.15, size * 0.85);
+  cx.bezierCurveTo(size * 0.05, size * 1.0, -size * 0.15, size * 0.95, -size * 0.2, size * 0.75);
+  cx.bezierCurveTo(-size * 0.45, size * 0.3, -size * 0.35, -size * 0.25, 0, -size * 0.5);
+  cx.fillStyle = '#E8231A';
+  cx.fill();
+  cx.strokeStyle = '#B01010';
+  cx.lineWidth = size * 0.05;
+  cx.stroke();
+  // highlight
+  cx.beginPath();
+  cx.moveTo(size * 0.1, -size * 0.3);
+  cx.bezierCurveTo(size * 0.32, -size * 0.1, size * 0.35, size * 0.2, size * 0.22, size * 0.5);
+  cx.strokeStyle = 'rgba(255,120,100,0.45)';
+  cx.lineWidth = size * 0.1;
+  cx.lineCap = 'round';
+  cx.stroke();
+  // stem
+  cx.beginPath();
+  cx.moveTo(0, -size * 0.5);
+  cx.bezierCurveTo(-size * 0.05, -size * 0.75, size * 0.2, -size * 0.85, size * 0.15, -size);
+  cx.strokeStyle = '#2E7D32';
+  cx.lineWidth = size * 0.1;
+  cx.lineCap = 'round';
+  cx.stroke();
+  cx.restore();
+}
+
+class DecoParticle {
+  constructor(initial) {
+    this.reset(initial);
+  }
+  reset(initial) {
+    this.type = Math.random() > 0.5 ? 'cheese' : 'chili';
+    this.x = Math.random() * window.innerWidth;
+    this.y = initial ? Math.random() * window.innerHeight : -60;
+    this.size = Math.random() * 16 + 12;
+    this.rot = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.012;
+    this.vy = Math.random() * 0.5 + 0.25;
+    this.vx = (Math.random() - 0.5) * 0.25;
+    this.sway = Math.random() * Math.PI * 2;
+    this.swaySpeed = Math.random() * 0.008 + 0.004;
+    this.swayAmt = Math.random() * 0.6 + 0.2;
+    this.opacity = Math.random() * 0.3 + 0.2;
+  }
+  update() {
+    this.y += this.vy;
+    this.x += this.vx + Math.sin(this.sway) * this.swayAmt;
+    this.sway += this.swaySpeed;
+    this.rot += this.rotSpeed;
+    if (this.y > window.innerHeight + 80) this.reset(false);
+  }
+  draw() {
+    dctx.save();
+    dctx.globalAlpha = this.opacity;
+    if (this.type === 'cheese') drawCheese(dctx, this.x, this.y, this.size, this.rot);
+    else drawChili(dctx, this.x, this.y, this.size, this.rot);
+    dctx.restore();
+  }
+}
+
+const decoParticles = Array.from({ length: 18 }, (_, i) => new DecoParticle(i < 14));
+
+function animateDeco() {
+  dctx.clearRect(0, 0, decoCanvas.width, decoCanvas.height);
+  decoParticles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateDeco);
+}
+animateDeco();
+
+// ── Fire canvas (cursor trail) ──
 const canvas = document.getElementById('fire-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
