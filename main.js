@@ -1,4 +1,4 @@
-// ── Deco canvas (cheese + chili) ──
+// ── Deco canvas (cheese + chili emojis) ──
 const decoCanvas = document.getElementById('deco-canvas');
 const dctx = decoCanvas.getContext('2d');
 
@@ -9,83 +9,40 @@ function resizeDeco() {
 resizeDeco();
 window.addEventListener('resize', resizeDeco);
 
-function drawCheese(cx, x, y, size, rot) {
-  cx.save();
-  cx.translate(x, y);
-  cx.rotate(rot);
-  // wedge body
-  cx.beginPath();
-  cx.moveTo(0, -size);
-  cx.lineTo(size * 0.85, size * 0.55);
-  cx.arcTo(size * 0.85, size * 0.7, -size * 0.85, size * 0.7, size * 0.18);
-  cx.lineTo(-size * 0.85, size * 0.55);
-  cx.closePath();
-  cx.fillStyle = '#F5C518';
-  cx.fill();
-  cx.strokeStyle = '#D4A017';
-  cx.lineWidth = size * 0.06;
-  cx.stroke();
-  // holes
-  [[0.15, 0.05], [-0.28, 0.28], [0.35, 0.35]].forEach(([hx, hy]) => {
-    cx.beginPath();
-    cx.arc(hx * size, hy * size, size * 0.11, 0, Math.PI * 2);
-    cx.fillStyle = '#C8960C';
-    cx.fill();
-  });
-  cx.restore();
+// Pre-render emojis to offscreen canvases once — much faster than fillText every frame
+const EMOJI_SIZE = 48;
+function makeEmojiSprite(emoji) {
+  const oc = document.createElement('canvas');
+  oc.width = oc.height = EMOJI_SIZE;
+  const ox = oc.getContext('2d');
+  ox.font = `${EMOJI_SIZE * 0.85}px serif`;
+  ox.textAlign = 'center';
+  ox.textBaseline = 'middle';
+  ox.fillText(emoji, EMOJI_SIZE / 2, EMOJI_SIZE / 2);
+  return oc;
 }
-
-function drawChili(cx, x, y, size, rot) {
-  cx.save();
-  cx.translate(x, y);
-  cx.rotate(rot);
-  // body
-  cx.beginPath();
-  cx.moveTo(0, -size * 0.5);
-  cx.bezierCurveTo(size * 0.45, -size * 0.3, size * 0.55, size * 0.4, size * 0.15, size * 0.85);
-  cx.bezierCurveTo(size * 0.05, size * 1.0, -size * 0.15, size * 0.95, -size * 0.2, size * 0.75);
-  cx.bezierCurveTo(-size * 0.45, size * 0.3, -size * 0.35, -size * 0.25, 0, -size * 0.5);
-  cx.fillStyle = '#E8231A';
-  cx.fill();
-  cx.strokeStyle = '#B01010';
-  cx.lineWidth = size * 0.05;
-  cx.stroke();
-  // highlight
-  cx.beginPath();
-  cx.moveTo(size * 0.1, -size * 0.3);
-  cx.bezierCurveTo(size * 0.32, -size * 0.1, size * 0.35, size * 0.2, size * 0.22, size * 0.5);
-  cx.strokeStyle = 'rgba(255,120,100,0.45)';
-  cx.lineWidth = size * 0.1;
-  cx.lineCap = 'round';
-  cx.stroke();
-  // stem
-  cx.beginPath();
-  cx.moveTo(0, -size * 0.5);
-  cx.bezierCurveTo(-size * 0.05, -size * 0.75, size * 0.2, -size * 0.85, size * 0.15, -size);
-  cx.strokeStyle = '#2E7D32';
-  cx.lineWidth = size * 0.1;
-  cx.lineCap = 'round';
-  cx.stroke();
-  cx.restore();
-}
+const sprites = {
+  cheese: makeEmojiSprite('🧀'),
+  chili:  makeEmojiSprite('🌶️'),
+};
 
 class DecoParticle {
   constructor(initial) {
     this.reset(initial);
   }
   reset(initial) {
-    this.type = Math.random() > 0.5 ? 'cheese' : 'chili';
+    this.sprite = Math.random() > 0.5 ? sprites.cheese : sprites.chili;
     this.x = Math.random() * window.innerWidth;
     this.y = initial ? Math.random() * window.innerHeight : -60;
-    this.size = Math.random() * 16 + 12;
+    this.scale = Math.random() * 0.45 + 0.3;
     this.rot = Math.random() * Math.PI * 2;
     this.rotSpeed = (Math.random() - 0.5) * 0.012;
-    this.vy = Math.random() * 0.5 + 0.25;
-    this.vx = (Math.random() - 0.5) * 0.25;
+    this.vy = Math.random() * 0.4 + 0.2;
+    this.vx = (Math.random() - 0.5) * 0.2;
     this.sway = Math.random() * Math.PI * 2;
-    this.swaySpeed = Math.random() * 0.008 + 0.004;
-    this.swayAmt = Math.random() * 0.6 + 0.2;
-    this.opacity = Math.random() * 0.3 + 0.2;
+    this.swaySpeed = Math.random() * 0.006 + 0.003;
+    this.swayAmt = Math.random() * 0.5 + 0.2;
+    this.opacity = Math.random() * 0.3 + 0.45;
   }
   update() {
     this.y += this.vy;
@@ -95,10 +52,12 @@ class DecoParticle {
     if (this.y > window.innerHeight + 80) this.reset(false);
   }
   draw() {
+    const half = (EMOJI_SIZE * this.scale) / 2;
     dctx.save();
     dctx.globalAlpha = this.opacity;
-    if (this.type === 'cheese') drawCheese(dctx, this.x, this.y, this.size, this.rot);
-    else drawChili(dctx, this.x, this.y, this.size, this.rot);
+    dctx.translate(this.x, this.y);
+    dctx.rotate(this.rot);
+    dctx.drawImage(this.sprite, -half, -half, EMOJI_SIZE * this.scale, EMOJI_SIZE * this.scale);
     dctx.restore();
   }
 }
