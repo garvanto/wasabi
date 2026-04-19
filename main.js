@@ -125,8 +125,12 @@ const meltMessages = [
 ];
 
 let meltTimeout = null;
+let meltCleanupTimeout = null;
 
 function meltFace() {
+  clearTimeout(meltTimeout);
+  clearTimeout(meltCleanupTimeout);
+
   const msg = document.getElementById('melt-msg');
 
   document.body.classList.remove('shake');
@@ -154,14 +158,13 @@ function meltFace() {
     }, i * 15);
   }
 
-  clearTimeout(meltTimeout);
   meltTimeout = setTimeout(() => {
     document.body.classList.remove('shake');
     mascot.style.transform = '';
     mascot.style.filter = '';
     mascot.style.animation = 'float 3s ease-in-out infinite';
     msg.style.opacity = '0';
-    setTimeout(() => { msg.textContent = ''; msg.style.opacity = '1'; }, 500);
+    meltCleanupTimeout = setTimeout(() => { msg.textContent = ''; msg.style.opacity = '1'; }, 500);
   }, 3000);
 }
 updateSpicyMeter();
