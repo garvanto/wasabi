@@ -95,7 +95,7 @@ const spicyLevels = [
   { pct: 0,   label: 'MILD',         color: '#6FFF00' },
   { pct: 25,  label: 'HOT',          color: '#AAFF00' },
   { pct: 50,  label: 'SPICY',        color: '#FFD700' },
-  { pct: 75,  label: 'FACE\nMELTING', color: '#FF6B00' },
+  { pct: 75,  label: 'FACE MELTING', color: '#FF6B00' },
   { pct: 100, label: 'ASCENDED',     color: '#FF0000' },
 ];
 
@@ -115,4 +115,53 @@ function updateSpicyMeter() {
 }
 
 window.addEventListener('scroll', updateSpicyMeter, { passive: true });
+
+const meltMessages = [
+  'FACE MELTED. YOU ARE NOW NGMI-PROOF.',
+  'TOO SPICY. YOUR WALLET IS ON FIRE.',
+  'CONGRATULATIONS. YOU ARE FULLY COOKED.',
+  'FACE: DISSOLVED. BAGS: HEAVY. VIBES: IMMACULATE.',
+  'WARNING: FACE NO LONGER INTACT. BUY MORE WASABI.',
+];
+
+let meltTimeout = null;
+
+function meltFace() {
+  const msg = document.getElementById('melt-msg');
+
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at center, transparent 40%, rgba(255,107,0,0.4) 100%);animation:fadeFlash 1s ease forwards;';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1000);
+
+  const mascot = document.getElementById('mascot');
+  mascot.style.animation = 'none';
+  mascot.style.transform = 'scale(1.3) rotate(10deg)';
+  mascot.style.filter = 'drop-shadow(0 0 40px #FF6B00) drop-shadow(0 0 80px rgba(255,107,0,0.6)) brightness(1.3)';
+
+  msg.textContent = meltMessages[Math.floor(Math.random() * meltMessages.length)];
+  msg.style.opacity = '1';
+
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const x = window.innerWidth / 2 + (Math.random() - 0.5) * 400;
+      const y = window.innerHeight / 2 + (Math.random() - 0.5) * 200;
+      particles.push(new Particle(x, y));
+    }, i * 15);
+  }
+
+  clearTimeout(meltTimeout);
+  meltTimeout = setTimeout(() => {
+    document.body.classList.remove('shake');
+    mascot.style.transform = '';
+    mascot.style.filter = '';
+    mascot.style.animation = 'float 3s ease-in-out infinite';
+    msg.style.opacity = '0';
+    setTimeout(() => { msg.textContent = ''; msg.style.opacity = '1'; }, 500);
+  }, 3000);
+}
 updateSpicyMeter();
