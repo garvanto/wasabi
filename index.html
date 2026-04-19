@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="fire-canvas"></canvas>
+  <canvas id="fire-canvas" aria-hidden="true"></canvas>
 
   <div id="spicy-meter">
     <div id="spicy-mascot-icon">MILD</div>
@@ -34,12 +34,12 @@
         <span id="ca-label">CONTRACT ADDRESS</span>
         <div id="ca-row">
           <code id="ca-text">DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump</code>
-          <button id="copy-btn" onclick="copyCA()">COPY</button>
+          <button id="copy-btn" aria-label="Copy contract address" onclick="copyCA()">COPY</button>
         </div>
       </div>
       <div id="hero-buttons">
-        <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" class="btn btn-primary">BUY $WASABI</a>
-        <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" class="btn btn-secondary">JOIN TELEGRAM</a>
+        <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" rel="noopener noreferrer" class="btn btn-primary">BUY $WASABI</a>
+        <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">JOIN TELEGRAM</a>
       </div>
     </div>
   </section>
@@ -103,20 +103,20 @@
       <div class="reel-window"><div class="reel" id="reel-3"></div></div>
     </div>
     <button id="spin-btn" onclick="spinSlot()">SPIN</button>
-    <a id="share-btn" href="#" target="_blank" style="display:none">SHARE ON TWITTER</a>
+    <a id="share-btn" href="#" target="_blank" class="hidden">SHARE ON TWITTER</a>
   </section>
 
   <footer id="footer">
     <img src="assets/logo.png" alt="Wasabi" id="footer-logo" />
     <p id="footer-tagline">$WASABI -- Stay Spicy.</p>
     <div id="socials">
-      <a href="https://x.com/wasabicheesesol" target="_blank" class="social-link">Twitter / X</a>
-      <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" class="social-link">Telegram</a>
-      <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" class="social-link">Dexscreener</a>
+      <a href="https://x.com/wasabicheesesol" target="_blank" rel="noopener noreferrer" class="social-link">Twitter / X</a>
+      <a href="https://t.me/+qW5wutIxveZkNjQ0" target="_blank" rel="noopener noreferrer" class="social-link">Telegram</a>
+      <a href="https://dexscreener.com/solana/5fc4vroj4n4dqtznt936y81eer3tyft2shn37qrmcq22" target="_blank" rel="noopener noreferrer" class="social-link">Dexscreener</a>
     </div>
     <div id="footer-ca">
       <code>DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump</code>
-      <button onclick="copyCA()">COPY</button>
+      <button aria-label="Copy contract address" onclick="copyCA()">COPY</button>
     </div>
     <p id="disclaimer">Not financial advice. Just spicy vibes.</p>
   </footer>
