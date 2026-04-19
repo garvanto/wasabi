@@ -67,7 +67,7 @@ function copyCA() {
         btn.classList.remove('copied');
       }, 2000);
     });
-  });
+  }).catch(() => {});
 }
 
 const eyeLeft = document.getElementById('eye-left');
@@ -87,3 +87,32 @@ function trackEyes(e) {
 }
 
 window.addEventListener('mousemove', trackEyes);
+
+const meterFill = document.getElementById('spicy-meter-fill');
+const spicyMascot = document.getElementById('spicy-mascot-icon');
+
+const spicyLevels = [
+  { pct: 0,   label: 'MILD',         color: '#6FFF00' },
+  { pct: 25,  label: 'HOT',          color: '#AAFF00' },
+  { pct: 50,  label: 'SPICY',        color: '#FFD700' },
+  { pct: 75,  label: 'FACE\nMELTING', color: '#FF6B00' },
+  { pct: 100, label: 'ASCENDED',     color: '#FF0000' },
+];
+
+function updateSpicyMeter() {
+  const scrollable = document.body.scrollHeight - window.innerHeight;
+  if (scrollable <= 0) return;
+  const pct = Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100));
+
+  meterFill.style.height = pct + '%';
+
+  const level = spicyLevels.reduce((prev, curr) => pct >= curr.pct ? curr : prev);
+
+  meterFill.style.background = `linear-gradient(to top, #6FFF00, ${level.color})`;
+  meterFill.style.boxShadow = pct > 75 ? `0 0 8px ${level.color}` : 'none';
+  spicyMascot.textContent = level.label;
+  spicyMascot.title = level.label;
+}
+
+window.addEventListener('scroll', updateSpicyMeter, { passive: true });
+updateSpicyMeter();
