@@ -128,9 +128,8 @@ body {
 
 #mascot-container {
   position: relative;
-  width: 180px;
-  height: 180px;
-  animation: float 3s ease-in-out infinite;
+  width: 200px;
+  height: 200px;
 }
 
 #mascot {
@@ -147,27 +146,27 @@ body {
 
 .eye {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  background: var(--text);
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .pupil {
-  width: 10px;
-  height: 10px;
-  background: var(--card-bg);
+  width: 9px;
+  height: 9px;
+  background: #111;
   border-radius: 50%;
   transition: transform 0.08s ease;
   position: absolute;
 }
 
-#eye-left { top: 62px; left: 52px; }
-#eye-right { top: 62px; right: 50px; }
+#eye-left  { top: 88px; left: 64px; }
+#eye-right { top: 88px; right: 60px; }
 
 #tagline {
   font-family: var(--font-head);
@@ -469,119 +468,201 @@ body.shake { animation: shake 0.6s ease; }
   100% { opacity: 0; }
 }
 
-#slot-section {
+#scoville-section {
   padding: 100px 20px;
   text-align: center;
-  background: radial-gradient(ellipse at center, rgba(111,255,0,0.03) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(255,107,0,0.04) 0%, transparent 70%);
 }
 
-#slot-section h2 {
+#scoville-title {
   font-family: var(--font-head);
   font-size: clamp(3rem, 6vw, 5rem);
   letter-spacing: 4px;
-  color: var(--green);
-  text-shadow: 0 0 30px rgba(111,255,0,0.4);
+  color: var(--fire);
+  text-shadow: 0 0 30px rgba(255,107,0,0.5);
   margin-bottom: 8px;
 }
 
-.slot-sub {
+#scoville-sub {
   color: var(--muted);
-  margin-bottom: 48px;
+  margin-bottom: 56px;
   font-size: 1rem;
 }
 
-#slot-machine {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-
-.reel-window {
-  width: 140px;
-  height: 80px;
-  background: var(--surface-mid);
-  border: 2px solid #333;
-  border-radius: 12px;
-  overflow: hidden;
+#quiz-container {
+  max-width: 640px;
+  margin: 0 auto 36px;
   position: relative;
+  min-height: 180px;
 }
 
-.reel-window::before,
-.reel-window::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  height: 20px;
-  z-index: 2;
-  pointer-events: none;
+.quiz-question {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.35s ease;
 }
 
-.reel-window::before { top: 0; background: linear-gradient(to bottom, var(--surface-mid), transparent); }
-.reel-window::after { bottom: 0; background: linear-gradient(to top, var(--surface-mid), transparent); }
+.quiz-question.active { display: flex; }
 
-.reel {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-text {
+  font-family: var(--font-head);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 2px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.q-options {
   display: flex;
   flex-direction: column;
-  transition: transform 0s;
+  gap: 12px;
 }
 
-.reel-item {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.q-btn {
   font-family: var(--font-head);
-  font-size: 1rem;
+  font-size: 1.1rem;
   letter-spacing: 2px;
-  color: var(--green);
-  padding: 0 8px;
-  text-align: center;
-  line-height: 1.2;
-}
-
-#spin-btn {
-  font-family: var(--font-head);
-  font-size: 1.5rem;
-  letter-spacing: 3px;
-  padding: 18px 50px;
-  background: transparent;
-  color: var(--green);
-  border: 2px solid var(--green);
+  padding: 16px 28px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid #333;
   border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
-  display: block;
-  margin: 0 auto 20px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  text-align: left;
 }
 
-#spin-btn:hover {
+.q-btn:hover {
+  border-color: var(--fire);
+  box-shadow: 0 0 20px rgba(255,107,0,0.2);
+  transform: translateX(6px);
+  background: rgba(255,107,0,0.06);
+}
+
+.q-btn.selected {
+  border-color: var(--fire);
+  background: rgba(255,107,0,0.12);
+  color: var(--gold);
+}
+
+#quiz-progress {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.progress-dot.active {
+  background: var(--fire);
+  box-shadow: 0 0 10px var(--fire);
+}
+
+.progress-dot.done {
   background: var(--green);
-  color: #000;
-  box-shadow: 0 0 30px var(--green);
+  box-shadow: 0 0 8px var(--green);
 }
 
-#spin-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+#scoville-result {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 32px;
+  border: 1px solid #333;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #0f0f0f, #111);
+  animation: fadeIn 0.5s ease;
 }
 
-#share-btn {
+#result-scoville-num {
+  font-family: var(--font-head);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--fire), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
+
+#result-label {
   font-family: var(--font-head);
   font-size: 1rem;
-  letter-spacing: 3px;
-  padding: 12px 32px;
-  background: #1da1f2;
-  color: #fff;
-  border-radius: 10px;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.3s;
+  letter-spacing: 6px;
+  color: var(--muted);
+  margin-bottom: 20px;
 }
 
-#share-btn:hover {
-  opacity: 0.85;
-  box-shadow: 0 0 20px rgba(29,161,242,0.4);
+#result-tier {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  letter-spacing: 3px;
+  color: var(--text);
+  text-shadow: 0 0 20px var(--fire);
+  margin-bottom: 16px;
+}
+
+#result-desc {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#scoville-share-btn {
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  padding: 16px 40px;
+  background: #000;
+  color: var(--text);
+  border: 2px solid var(--text);
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-bottom: 16px;
+}
+
+#scoville-share-btn:hover {
+  background: var(--text);
+  color: #000;
+  box-shadow: 0 0 24px rgba(255,255,255,0.2);
+}
+
+#retake-btn {
+  display: block;
+  margin: 0 auto;
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+  padding: 10px 28px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#retake-btn:hover {
+  color: var(--text);
+  border-color: #555;
 }
 
 #footer {

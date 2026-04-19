@@ -202,70 +202,108 @@ function meltFace() {
     document.body.classList.remove('shake');
     mascot.style.transform = '';
     mascot.style.filter = '';
-    mascot.style.animation = 'float 3s ease-in-out infinite';
+    mascot.style.animation = '';
     msg.style.opacity = '0';
     meltCleanupTimeout = setTimeout(() => { msg.textContent = ''; msg.style.opacity = '1'; }, 500);
   }, 3000);
 }
 updateSpicyMeter();
 
-const reelWords = [
-  ['BUY', 'HOLD', 'WAGMI', 'MOON', 'PUMP', 'SHILL', 'APE', 'SEND'],
-  ['MORE', 'THE DIP', 'HARDER', 'SPICY', 'NOW', 'EVERYTHING', '100X', 'IT'],
-  ['NOW', 'OR STAY POOR', 'EVERY DAY', 'FACE FIRST', 'WITH BOTH HANDS', 'AND MELT FACES', 'TO THE MOON', 'LFG'],
+const scovTiers = [
+  {
+    min: 3, max: 4,
+    scoville: '100,000',
+    tier: 'MILD SAUCE ENJOYER',
+    desc: 'You check prices once a week. You sleep well. Statistically you are winning but you will never admit it.',
+    tweet: 'I scored 100,000 Scoville on the $WASABI Spicy Test. Mild Sauce Enjoyer tier. Apparently I am built different (mild). Can you beat me?',
+  },
+  {
+    min: 5, max: 5,
+    scoville: '500,000',
+    tier: 'SRIRACHA DEGEN',
+    desc: 'You know what a chart is. You use the word "accumulate" unironically. Mid-tier spicy — and you know it.',
+    tweet: 'I scored 500,000 Scoville on the $WASABI Spicy Test. Sriracha Degen tier. Spicier than most. Think you can handle it?',
+  },
+  {
+    min: 6, max: 7,
+    scoville: '1,000,000',
+    tier: 'GHOST PEPPER TRADER',
+    desc: 'Your portfolio has been rekt at least twice and you came back stronger. Pain is your fuel. Wasabi is your god.',
+    tweet: 'I scored 1,000,000 Scoville on the $WASABI Spicy Test. Ghost Pepper Trader tier. Most people cannot handle this level. Prove me wrong.',
+  },
+  {
+    min: 8, max: 9,
+    scoville: '2,200,000',
+    tier: 'PURE CAPSAICIN',
+    desc: 'You do not have a risk management strategy. You ARE the risk. $WASABI did not find you — you found it first.',
+    tweet: 'I scored 2,200,000 Scoville on the $WASABI Spicy Test. PURE CAPSAICIN tier. I am untouchable. I dare you to try.',
+  },
 ];
 
-let isSpinning = false;
+let quizScore = 0;
+let currentQ = 0;
 
-function buildReels() {
-  [1, 2, 3].forEach(i => {
-    const reel = document.getElementById(`reel-${i}`);
-    const words = reelWords[i - 1];
-    [...words, ...words, ...words].forEach(w => {
-      const item = document.createElement('div');
-      item.className = 'reel-item';
-      item.textContent = w;
-      reel.appendChild(item);
-    });
-  });
-}
+document.querySelectorAll('.q-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const score = parseInt(btn.dataset.score, 10);
+    quizScore += score;
 
-buildReels();
+    btn.classList.add('selected');
+    btn.closest('.quiz-question').querySelectorAll('.q-btn').forEach(b => { b.disabled = true; });
 
-function spinSlot() {
-  if (isSpinning) return;
-  isSpinning = true;
+    document.querySelector(`.progress-dot[data-dot="${currentQ}"]`).classList.replace('active', 'done');
+    currentQ++;
 
-  const spinBtn = document.getElementById('spin-btn');
-  const shareBtn = document.getElementById('share-btn');
-  spinBtn.disabled = true;
-  shareBtn.classList.add('hidden');
-
-  const results = [];
-
-  [1, 2, 3].forEach((i, idx) => {
-    const reel = document.getElementById(`reel-${i}`);
-    const words = reelWords[i - 1];
-    const targetIndex = Math.floor(Math.random() * words.length);
-    const itemHeight = 80;
-    const targetPosition = (words.length + targetIndex) * itemHeight;
-    const extraSpins = (3 + idx) * words.length * itemHeight;
-    const finalPos = targetPosition + extraSpins;
-
-    reel.style.transition = `transform ${1.5 + idx * 0.4}s cubic-bezier(0.17, 0.67, 0.35, 1)`;
-    reel.style.transform = `translateY(-${finalPos}px)`;
-
-    results[idx] = words[targetIndex];
-
-    if (idx === 2) {
+    if (currentQ < 3) {
       setTimeout(() => {
-        isSpinning = false;
-        spinBtn.disabled = false;
-        const result = results.join(' ');
-        const tweetText = encodeURIComponent(`Wasabi Wisdom says: "${result}" -- $WASABI on Solana. Stay spicy. https://x.com/wasabicheesesol`);
-        shareBtn.href = `https://twitter.com/intent/tweet?text=${tweetText}`;
-        shareBtn.classList.remove('hidden');
-      }, (1.5 + idx * 0.4) * 1000 + 300);
+        document.querySelector(`.quiz-question[data-q="${currentQ - 1}"]`).classList.remove('active');
+        const next = document.querySelector(`.quiz-question[data-q="${currentQ}"]`);
+        next.classList.add('active');
+        document.querySelector(`.progress-dot[data-dot="${currentQ}"]`).classList.add('active');
+      }, 340);
+    } else {
+      setTimeout(showScovilleResult, 400);
     }
   });
+});
+
+function showScovilleResult() {
+  const tier = scovTiers.find(t => quizScore >= t.min && quizScore <= t.max);
+  document.getElementById('quiz-container').classList.add('hidden');
+  document.getElementById('quiz-progress').classList.add('hidden');
+
+  const result = document.getElementById('scoville-result');
+  document.getElementById('result-scoville-num').textContent = tier.scoville;
+  document.getElementById('result-tier').textContent = tier.tier;
+  document.getElementById('result-desc').textContent = tier.desc;
+
+  const tweetText = encodeURIComponent(`${tier.tweet} $WASABI https://x.com/wasabicheesesol`);
+  document.getElementById('scoville-share-btn').href = `https://twitter.com/intent/tweet?text=${tweetText}`;
+
+  result.classList.remove('hidden');
+
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const x = window.innerWidth / 2 + (Math.random() - 0.5) * 600;
+      const y = window.innerHeight * 0.6 + (Math.random() - 0.5) * 200;
+      particles.push(new Particle(x, y));
+    }, i * 20);
+  }
+}
+
+function retakeQuiz() {
+  quizScore = 0;
+  currentQ = 0;
+
+  document.querySelectorAll('.quiz-question').forEach((q, i) => {
+    q.classList.toggle('active', i === 0);
+    q.querySelectorAll('.q-btn').forEach(b => { b.disabled = false; b.classList.remove('selected'); });
+  });
+  document.querySelectorAll('.progress-dot').forEach((d, i) => {
+    d.className = 'progress-dot' + (i === 0 ? ' active' : '');
+  });
+
+  document.getElementById('scoville-result').classList.add('hidden');
+  document.getElementById('quiz-container').classList.remove('hidden');
+  document.getElementById('quiz-progress').classList.remove('hidden');
 }

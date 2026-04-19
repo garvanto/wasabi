@@ -25,7 +25,7 @@
     <div id="hero-bg"></div>
     <div id="hero-content">
       <div id="mascot-container">
-        <img id="mascot" src="assets/logo.jpg" alt="Wasabi mascot" />
+        <img id="mascot" src="assets/logo.png" alt="Wasabi mascot" />
         <div class="eye" id="eye-left"><div class="pupil"></div></div>
         <div class="eye" id="eye-right"><div class="pupil"></div></div>
       </div>
@@ -94,20 +94,55 @@
     <div id="melt-msg"></div>
   </section>
 
-  <section id="slot-section">
-    <h2>WASABI WISDOM</h2>
-    <p class="slot-sub">Spin for your daily prophecy</p>
-    <div id="slot-machine">
-      <div class="reel-window"><div class="reel" id="reel-1"></div></div>
-      <div class="reel-window"><div class="reel" id="reel-2"></div></div>
-      <div class="reel-window"><div class="reel" id="reel-3"></div></div>
+  <section id="scoville-section">
+    <h2 id="scoville-title">THE SCOVILLE TEST</h2>
+    <p id="scoville-sub">How spicy is your portfolio? Find out.</p>
+
+    <div id="quiz-container">
+      <div class="quiz-question active" data-q="0">
+        <p class="q-text">Market dumps 40%. You...</p>
+        <div class="q-options">
+          <button class="q-btn" data-score="1">Panic sell then rebuy higher</button>
+          <button class="q-btn" data-score="2">Hold and touch grass</button>
+          <button class="q-btn" data-score="3">Buy everything in sight</button>
+        </div>
+      </div>
+      <div class="quiz-question" data-q="1">
+        <p class="q-text">Your average hold time is...</p>
+        <div class="q-options">
+          <button class="q-btn" data-score="1">I forgot I had this wallet</button>
+          <button class="q-btn" data-score="2">A few days, maybe a week</button>
+          <button class="q-btn" data-score="3">Under an hour</button>
+        </div>
+      </div>
+      <div class="quiz-question" data-q="2">
+        <p class="q-text">How did you find $WASABI?</p>
+        <div class="q-options">
+          <button class="q-btn" data-score="1">My friend said it was safe</button>
+          <button class="q-btn" data-score="2">Twitter sent me</button>
+          <button class="q-btn" data-score="3">Ape'd in before anyone knew</button>
+        </div>
+      </div>
     </div>
-    <button id="spin-btn" onclick="spinSlot()">SPIN</button>
-    <a id="share-btn" href="#" target="_blank" class="hidden">SHARE ON TWITTER</a>
+
+    <div id="quiz-progress">
+      <div class="progress-dot active" data-dot="0"></div>
+      <div class="progress-dot" data-dot="1"></div>
+      <div class="progress-dot" data-dot="2"></div>
+    </div>
+
+    <div id="scoville-result" class="hidden">
+      <div id="result-scoville-num"></div>
+      <div id="result-label">SCOVILLE</div>
+      <div id="result-tier"></div>
+      <p id="result-desc"></p>
+      <a id="scoville-share-btn" href="#" target="_blank" rel="noopener noreferrer">SHARE ON X</a>
+      <button id="retake-btn" onclick="retakeQuiz()">RETAKE</button>
+    </div>
   </section>
 
   <footer id="footer">
-    <img src="assets/logo.jpg" alt="Wasabi" id="footer-logo" />
+    <img src="assets/logo.png" alt="Wasabi" id="footer-logo" />
     <p id="footer-tagline">$WASABI -- Stay Spicy.</p>
     <div id="socials">
       <a href="https://x.com/wasabicheesesol" target="_blank" rel="noopener noreferrer" class="social-link">Twitter / X</a>
