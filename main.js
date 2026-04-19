@@ -98,16 +98,31 @@ animateAll();
 
 function copyCA() {
   const ca = 'DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump';
-  navigator.clipboard.writeText(ca).then(() => {
+
+  const confirm = () => {
     document.querySelectorAll('#copy-btn, #footer-ca button').forEach(btn => {
       btn.textContent = 'COPIED!';
       btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'COPY';
-        btn.classList.remove('copied');
-      }, 2000);
+      setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
     });
-  }).catch(() => {});
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ca).then(confirm).catch(() => fallbackCopy(ca, confirm));
+  } else {
+    fallbackCopy(ca, confirm);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
 }
 
 const meterFill = document.getElementById('spicy-meter-fill');
