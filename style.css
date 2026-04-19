@@ -212,8 +212,8 @@ body {
   letter-spacing: 3px;
   color: var(--text);
   text-shadow:
-    0 0 20px var(--green),
-    0 0 40px rgba(111,255,0,0.5),
+    0 0 18px var(--green),
+    0 0 36px rgba(111,255,0,0.45),
     3px 3px 0 rgba(0,0,0,0.8);
 }
 
