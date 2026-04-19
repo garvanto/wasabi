@@ -110,23 +110,10 @@ function copyCA() {
   }).catch(() => {});
 }
 
-const eyeLeft = document.getElementById('eye-left');
-const eyeRight = document.getElementById('eye-right');
-
-function trackEyes(e) {
-  [eyeLeft, eyeRight].forEach(eye => {
-    const rect = eye.getBoundingClientRect();
-    const eyeCX = rect.left + rect.width / 2;
-    const eyeCY = rect.top + rect.height / 2;
-    const angle = Math.atan2(e.clientY - eyeCY, e.clientX - eyeCX);
-    const dist = 4;
-    const x = Math.cos(angle) * dist;
-    const y = Math.sin(angle) * dist;
-    eye.querySelector('.pupil').style.transform = `translate(${x}px, ${y}px)`;
-  });
-}
-
-window.addEventListener('mousemove', trackEyes);
+const siteHeader = document.getElementById('site-header');
+window.addEventListener('scroll', () => {
+  siteHeader.classList.toggle('visible', window.scrollY > 80);
+}, { passive: true });
 
 const meterFill = document.getElementById('spicy-meter-fill');
 const spicyMascot = document.getElementById('spicy-mascot-icon');
@@ -275,7 +262,6 @@ function showScovilleResult() {
   const result = document.getElementById('scoville-result');
   document.getElementById('result-scoville-num').textContent = tier.scoville;
   document.getElementById('result-tier').textContent = tier.tier;
-  document.getElementById('result-desc').textContent = tier.desc;
 
   const tweetText = encodeURIComponent(`${tier.tweet} $WASABI https://x.com/wasabicheesesol`);
   document.getElementById('scoville-share-btn').href = `https://twitter.com/intent/tweet?text=${tweetText}`;
