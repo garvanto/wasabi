@@ -168,3 +168,64 @@ function meltFace() {
   }, 3000);
 }
 updateSpicyMeter();
+
+const reelWords = [
+  ['BUY', 'HOLD', 'WAGMI', 'MOON', 'PUMP', 'SHILL', 'APE', 'SEND'],
+  ['MORE', 'THE DIP', 'HARDER', 'SPICY', 'NOW', 'EVERYTHING', '100X', 'IT'],
+  ['NOW', 'OR STAY POOR', 'EVERY DAY', 'FACE FIRST', 'WITH BOTH HANDS', 'AND MELT FACES', 'TO THE MOON', 'LFG'],
+];
+
+let isSpinning = false;
+
+function buildReels() {
+  [1, 2, 3].forEach(i => {
+    const reel = document.getElementById(`reel-${i}`);
+    const words = reelWords[i - 1];
+    [...words, ...words, ...words].forEach(w => {
+      const item = document.createElement('div');
+      item.className = 'reel-item';
+      item.textContent = w;
+      reel.appendChild(item);
+    });
+  });
+}
+
+buildReels();
+
+function spinSlot() {
+  if (isSpinning) return;
+  isSpinning = true;
+
+  const spinBtn = document.getElementById('spin-btn');
+  const shareBtn = document.getElementById('share-btn');
+  spinBtn.disabled = true;
+  shareBtn.classList.add('hidden');
+
+  const results = [];
+
+  [1, 2, 3].forEach((i, idx) => {
+    const reel = document.getElementById(`reel-${i}`);
+    const words = reelWords[i - 1];
+    const targetIndex = Math.floor(Math.random() * words.length);
+    const itemHeight = 80;
+    const targetPosition = (words.length + targetIndex) * itemHeight;
+    const extraSpins = (3 + idx) * words.length * itemHeight;
+    const finalPos = targetPosition + extraSpins;
+
+    reel.style.transition = `transform ${1.5 + idx * 0.4}s cubic-bezier(0.17, 0.67, 0.35, 1)`;
+    reel.style.transform = `translateY(-${finalPos}px)`;
+
+    results[idx] = words[targetIndex];
+
+    if (idx === 2) {
+      setTimeout(() => {
+        isSpinning = false;
+        spinBtn.disabled = false;
+        const result = results.join(' ');
+        const tweetText = encodeURIComponent(`Wasabi Wisdom says: "${result}" -- $WASABI on Solana. Stay spicy. https://x.com/wasabicheesesol`);
+        shareBtn.href = `https://twitter.com/intent/tweet?text=${tweetText}`;
+        shareBtn.classList.remove('hidden');
+      }, (1.5 + idx * 0.4) * 1000 + 300);
+    }
+  });
+}
