@@ -302,3 +302,198 @@ function updateMeltDisplay() {
 }
 updateMeltDisplay();
 
+// ── Live Price Data ──
+const DEXSCREENER_URL = 'https://api.dexscreener.com/latest/dex/tokens/DSZeB6pCzZsM43gTz7jakiYeCafinsNMKcpeB1FApump';
+
+const HEAT_LEVELS = [
+  { min: -Infinity, label: 'ICE COLD',     color: '#4499FF', cls: 'heat-0' },
+  { min: 0,         label: 'WARMING UP',   color: '#6FFF00', cls: 'heat-1' },
+  { min: 10,        label: 'SPICY',        color: '#FFD700', cls: 'heat-2' },
+  { min: 30,        label: 'FACE MELTING', color: '#FF6B00', cls: 'heat-3' },
+  { min: 100,       label: 'NUCLEAR',      color: '#FF0000', cls: 'heat-4' },
+];
+
+function getHeat(change) {
+  return [...HEAT_LEVELS].reverse().find(h => change >= h.min) || HEAT_LEVELS[0];
+}
+
+function fmtPrice(p) {
+  const n = parseFloat(p);
+  if (isNaN(n) || n === 0) return '--';
+  if (n < 0.000001) return '$' + n.toExponential(2);
+  if (n < 0.001)    return '$' + n.toFixed(8);
+  if (n < 1)        return '$' + n.toFixed(6);
+  return '$' + n.toFixed(4);
+}
+
+function fmtUSD(n) {
+  if (!n) return '--';
+  if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+  return '$' + n.toFixed(0);
+}
+
+async function fetchPriceData() {
+  try {
+    const res = await fetch(DEXSCREENER_URL);
+    const data = await res.json();
+    const pair = data.pairs?.[0];
+    if (!pair) return;
+
+    const change = parseFloat(pair.priceChange?.h24 || 0);
+    const heat = getHeat(change);
+
+    const priceEl   = document.getElementById('ps-price');
+    const changeEl  = document.getElementById('ps-change');
+    const mcapEl    = document.getElementById('ps-mcap');
+    const volEl     = document.getElementById('ps-vol');
+    const heatLabel = document.getElementById('ps-heat-label');
+    const badgeText = document.getElementById('heat-badge-text');
+    const badgeEl   = document.getElementById('heat-badge');
+    const mascot    = document.getElementById('mascot');
+
+    if (priceEl)   priceEl.textContent = fmtPrice(pair.priceUsd);
+    if (mcapEl)    mcapEl.textContent  = fmtUSD(pair.fdv);
+    if (volEl)     volEl.textContent   = fmtUSD(pair.volume?.h24);
+
+    if (changeEl) {
+      changeEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+      changeEl.style.color = change >= 0 ? '#6FFF00' : '#FF4444';
+    }
+    if (heatLabel) { heatLabel.textContent = heat.label; heatLabel.style.color = heat.color; }
+    if (badgeText) { badgeText.textContent = heat.label; badgeText.style.color = heat.color; }
+    if (badgeEl)   badgeEl.style.borderColor = heat.color + '44';
+
+    if (mascot) {
+      mascot.classList.remove('heat-0','heat-1','heat-2','heat-3','heat-4');
+      mascot.classList.add(heat.cls);
+    }
+  } catch (e) { /* silently fail */ }
+}
+
+fetchPriceData();
+setInterval(fetchPriceData, 30000);
+
+// ── Wasabi Roulette ──
+function effectMild() {
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9997;background:rgba(111,255,0,0.07);animation:fadeFlash 0.5s ease forwards;';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 600);
+}
+
+function effectSpicy() {
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9997;background:radial-gradient(ellipse at center,transparent 30%,rgba(255,107,0,0.35) 100%);animation:fadeFlash 0.9s ease forwards;';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 900);
+  for (let i = 0; i < 40; i++) {
+    setTimeout(() => {
+      particles.push(new Particle(
+        window.innerWidth / 2 + (Math.random() - 0.5) * 500,
+        window.innerHeight / 2 + (Math.random() - 0.5) * 300
+      ));
+    }, i * 12);
+  }
+}
+
+function effectNuclear() {
+  document.body.classList.remove('nuclear-shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('nuclear-shake');
+  setTimeout(() => document.body.classList.remove('nuclear-shake'), 1000);
+
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9997;background:radial-gradient(ellipse at center,rgba(255,0,0,0.55) 0%,rgba(0,0,0,0.5) 100%);animation:nuclearFlash 1.5s ease forwards;';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1500);
+
+  const mascot = document.getElementById('mascot');
+  mascot.style.animation = 'none';
+  mascot.style.transform = 'scale(1.4) rotate(-8deg)';
+  mascot.style.filter = 'drop-shadow(0 0 60px #FF0000) drop-shadow(0 0 120px rgba(255,0,0,0.7)) brightness(1.4)';
+  setTimeout(() => { mascot.style.transform = ''; mascot.style.filter = ''; mascot.style.animation = ''; }, 2000);
+
+  for (let i = 0; i < 100; i++) {
+    setTimeout(() => {
+      particles.push(new Particle(
+        window.innerWidth / 2 + (Math.random() - 0.5) * 700,
+        window.innerHeight / 2 + (Math.random() - 0.5) * 500
+      ));
+    }, i * 8);
+  }
+
+  const splash = document.createElement('div');
+  splash.textContent = 'NUCLEAR';
+  splash.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.3);font-family:'Bangers',cursive;font-size:clamp(5rem,15vw,11rem);letter-spacing:8px;color:#FF0000;text-shadow:0 0 40px #FF0000,0 0 80px rgba(255,0,0,0.6);pointer-events:none;z-index:9998;animation:nuclearWord 1.5s ease forwards;";
+  document.body.appendChild(splash);
+  setTimeout(() => splash.remove(), 1500);
+}
+
+const ROULETTE_OUTCOMES = [
+  { id: 'mild',    label: 'MILD',    color: '#6FFF00', effect: effectMild,    msgs: ['TOO WEAK. YOUR SINUSES ARE INTACT. SAD.','YOU FELT NOTHING. ARE YOU EVEN HUMAN?','MILD? REALLY? BUY MORE AND TRY AGAIN.'] },
+  { id: 'spicy',   label: 'SPICY',   color: '#FFD700', effect: effectSpicy,   msgs: ['YOUR NOSE IS RUNNING. THIS IS NORMAL.','FACE: TINGLING. WALLET: GROWING. THIS IS THE WAY.','SPICY DETECTED. YOU ARE BECOMING BASED.'] },
+  { id: 'nuclear', label: 'NUCLEAR', color: '#FF0000', effect: effectNuclear, msgs: ['FACE: DISSOLVED. SINUSES: GONE. BAGS: HEAVY.','YOUR NOSE HAS LEFT YOUR BODY. CONGRATULATIONS.','MAXIMUM WASABI ACHIEVED. YOU CANNOT BE STOPPED.'] },
+];
+
+let rouletteSpinning = false;
+
+function spinRoulette() {
+  if (rouletteSpinning) return;
+  rouletteSpinning = true;
+
+  const btn     = document.getElementById('roulette-btn');
+  const display = document.getElementById('roulette-display');
+  const msg     = document.getElementById('roulette-msg');
+
+  btn.disabled = true;
+  btn.textContent = 'BITING...';
+  msg.style.opacity = '0';
+  display.className = '';
+  display.style.color = '#555';
+  display.textContent = '?';
+
+  const rand = Math.random();
+  const outcome = rand < 0.15 ? ROULETTE_OUTCOMES[2] : rand < 0.55 ? ROULETTE_OUTCOMES[1] : ROULETTE_OUTCOMES[0];
+
+  const labels = ['MILD','SPICY','NUCLEAR'];
+  const colors = { MILD: '#6FFF00', SPICY: '#FFD700', NUCLEAR: '#FF0000' };
+  let step = 0;
+  const totalSteps = 22;
+
+  function tick() {
+    const lbl = labels[step % labels.length];
+    display.textContent = lbl;
+    display.style.color = colors[lbl];
+    step++;
+    if (step < totalSteps) {
+      setTimeout(tick, 50 + 350 * Math.pow(step / totalSteps, 2.5));
+    } else {
+      display.className = 'result-' + outcome.id;
+      display.textContent = outcome.label;
+      display.style.color = outcome.color;
+      outcome.effect();
+      msg.textContent = outcome.msgs[Math.floor(Math.random() * outcome.msgs.length)];
+      msg.style.color = outcome.color;
+      msg.style.textShadow = '0 0 20px ' + outcome.color;
+      msg.style.opacity = '1';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = 'TAKE A BITE';
+        rouletteSpinning = false;
+        setTimeout(() => {
+          display.className = '';
+          display.style.color = '#333';
+          display.textContent = '?';
+          msg.style.opacity = '0';
+        }, 3000);
+      }, 2000);
+    }
+  }
+  tick();
+}
+

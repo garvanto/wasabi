@@ -25,6 +25,35 @@
     </div>
   </header>
 
+  <div id="price-strip">
+    <div id="price-strip-inner">
+      <div class="ps-live-dot"></div>
+      <div class="ps-item">
+        <span class="ps-label">PRICE</span>
+        <span id="ps-price" class="ps-val">--</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item">
+        <span class="ps-label">24H</span>
+        <span id="ps-change" class="ps-val">--</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item" id="ps-mcap-item">
+        <span class="ps-label">MCAP</span>
+        <span id="ps-mcap" class="ps-val">--</span>
+      </div>
+      <div class="ps-sep" id="ps-mcap-sep"></div>
+      <div class="ps-item" id="ps-vol-item">
+        <span class="ps-label">VOL 24H</span>
+        <span id="ps-vol" class="ps-val">--</span>
+      </div>
+      <div class="ps-sep"></div>
+      <div class="ps-item ps-heat-item">
+        <span id="ps-heat-label" class="ps-heat-label">LOADING</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Spicy-O-Meter -->
   <div id="spicy-meter" aria-hidden="true">
     <div id="spicy-mascot-icon">MILD</div>
@@ -41,6 +70,7 @@
       <div id="mascot-container">
         <img id="mascot" src="assets/logo.png" alt="Wasabi mascot" />
       </div>
+      <div id="heat-badge"><span id="heat-badge-text">LIVE</span></div>
       <h1 id="tagline">STAY SPICY.<br/>PRINT MONEY.<br/>MELT FACES.</h1>
       <a href="#about" id="scroll-hint" aria-label="Scroll down">
         <span id="scroll-hint-text">SCROLL</span>
@@ -113,6 +143,22 @@
         <span class="tknx-label">LAUNCH</span>
       </div>
     </div>
+  </section>
+
+  <!-- WASABI ROULETTE -->
+  <section id="roulette-section" class="reveal">
+    <h2 id="roulette-title">WASABI ROULETTE</h2>
+    <p id="roulette-sub">Do you dare take a bite?</p>
+    <div id="roulette-machine">
+      <div id="roulette-display">?</div>
+      <div id="roulette-odds">
+        <span class="odd odd-mild">MILD 45%</span>
+        <span class="odd odd-spicy">SPICY 40%</span>
+        <span class="odd odd-nuclear">NUCLEAR 15%</span>
+      </div>
+    </div>
+    <button id="roulette-btn" onclick="spinRoulette()">TAKE A BITE</button>
+    <div id="roulette-msg"></div>
   </section>
 
   <!-- COMMUNITY -->
