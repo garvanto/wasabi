@@ -2,22 +2,38 @@
 const SUPABASE_URL      = 'https://mkahcfdbwtxnhbzftwbv.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_ElGr-ThlzqbSP4YLTD3zow_79cloF8j';
 
-const GRAVITY         = 0.4;
-const FLAP_FORCE      = -8.5;
-const TUBE_WIDTH      = 68;
-const TUBE_GAP_START  = 170;
-const TUBE_GAP_MIN    = 170;
-const SPEED_START     = 2.2;
-const SPEED_MAX       = 5.2;
+// ── Physics base values (calibrated to original Flappy Bird's 288×512 screen) ──
+// Everything scales with vScale() so the game feels identical on any device.
+const GRAVITY_BASE    = 0.50;   // original: ~0.5 px/frame²
+const FLAP_BASE       = -9.0;   // original: −9 px/frame upward impulse
+const SPEED_START     = 3.2;    // px/frame starting pipe speed
+const SPEED_MAX       = 5.8;    // px/frame max pipe speed
+const SPEED_RAMP      = 0.28;   // added per 10-point level
 
-// Scale speed to viewport so mobile and desktop feel the same
-function speedScale() { return Math.max(0.55, Math.min(1, canvas.width / 900)); }
-// Keep 2 tubes always visible — spacing capped to 55% of viewport width
-function tubeSpacing() { return Math.min(290, canvas.width * 0.55); }
-const MASCOT_X        = 110;   // fixed horizontal position
-// Mascot bigger on small screens for visibility
-function mascotSize() { return canvas.width < 500 ? 68 : 52; }
+// ── Layout constants ──────────────────────────────────────────────────────────
+const TUBE_WIDTH      = 68;     // px, same across all viewports
 const DEATH_FRAMES    = 55;
+
+// ── Viewport scaling ──────────────────────────────────────────────────────────
+// vScale() maps any screen height to the original 512 px reference so physics
+// arcs stay the same PROPORTION of the screen on every device.
+function vScale()      { return canvas.height / 512; }
+
+// Derived physics (call each frame — canvas size can change on resize/rotate)
+function liveGravity()   { return GRAVITY_BASE * vScale(); }
+function liveFlapForce() { return FLAP_BASE    * vScale(); }
+function liveVelCap()    { return 14 * vScale(); }          // terminal velocity cap
+
+// Tube gap: 28% of viewport height (original: 120/512 = 23%; we give a touch more room)
+function liveTubeGap()  { return Math.max(150, canvas.height * 0.28); }
+
+// Tube spacing: 58% of viewport width (guarantees 2 tubes always visible)
+function tubeSpacing()  { return Math.min(canvas.width * 0.58, 340); }
+
+// Mascot: ~8% of viewport height, clamped 52–72 px
+function mascotSize()   { return Math.round(Math.min(Math.max(52, canvas.height * 0.08), 72)); }
+
+const MASCOT_X = 110;   // fixed horizontal position (px from left)
 
 const HEAT_RANKS = [
   { min: 0,  label: 'MILD',         color: '#6FFF00' },
@@ -106,7 +122,6 @@ let tubes       = [];
 let sparks      = [];
 let score       = 0;
 let gameSpeed   = SPEED_START;
-let tubeGap     = TUBE_GAP_START;
 let deathTimer  = 0;
 let shakeX      = 0;
 let shakeY      = 0;
@@ -133,8 +148,7 @@ function resetGame() {
   tubes      = [];
   sparks     = [];
   score      = 0;
-  gameSpeed  = SPEED_START * speedScale();
-  tubeGap    = TUBE_GAP_START;
+  gameSpeed  = SPEED_START;
   deathTimer = 0;
   shakeX     = 0;
   shakeY     = 0;
@@ -149,7 +163,7 @@ function resetGame() {
 // ── Input ─────────────────────────────────────────────────────────────────────
 function handleInput() {
   if (state === STATE.START)    { startGame(); return; }
-  if (state === STATE.PLAYING)  { mascotVY = FLAP_FORCE; }
+  if (state === STATE.PLAYING)  { mascotVY = liveFlapForce(); }
   if (state === STATE.GAMEOVER) { retry(); }
 }
 
@@ -227,8 +241,9 @@ function showGameOver() {
 
 // ── Tube Logic ────────────────────────────────────────────────────────────────
 function spawnTube() {
+  const gap    = liveTubeGap();
   const margin = 90;
-  const gapY   = Math.random() * (canvas.height - tubeGap - margin * 2) + margin;
+  const gapY   = Math.random() * (canvas.height - gap - margin * 2) + margin;
   tubes.push({ x: canvas.width + TUBE_WIDTH / 2, gapY, passed: false });
 }
 
@@ -246,9 +261,9 @@ function updateTubes() {
       const hudRank = document.getElementById('hud-rank');
       hudRank.textContent = heat.label;
       hudRank.style.color = heat.color;
-      // Ramp difficulty
+      // Mild speed ramp — every 10 points
       const lvl = Math.floor(score / 10);
-      gameSpeed = Math.min(SPEED_MAX * speedScale(), (SPEED_START + lvl * 0.38) * speedScale());
+      gameSpeed = Math.min(SPEED_MAX, SPEED_START + lvl * SPEED_RAMP);
     }
   }
   tubes = tubes.filter(t => t.x > -TUBE_WIDTH);
@@ -256,11 +271,12 @@ function updateTubes() {
 
 // ── Collision ─────────────────────────────────────────────────────────────────
 function hitTest() {
-  const r = mascotSize() / 2 - 9;
+  const gap = liveTubeGap();
+  const r   = mascotSize() / 2 - 9;
   if (mascotY - r < 0 || mascotY + r > canvas.height) return true;
   for (const t of tubes) {
     if (Math.abs(t.x - MASCOT_X) < TUBE_WIDTH / 2 + r - 6) {
-      if (mascotY - r < t.gapY || mascotY + r > t.gapY + tubeGap) return true;
+      if (mascotY - r < t.gapY || mascotY + r > t.gapY + gap) return true;
     }
   }
   return false;
@@ -282,6 +298,7 @@ function roundRect(x, y, w, h, r) {
 }
 
 function drawTube(t) {
+  const gap     = liveTubeGap();
   const hw      = TUBE_WIDTH / 2;
   const nozzleH = 22;
   const nozzleW = TUBE_WIDTH + 14;
@@ -309,12 +326,12 @@ function drawTube(t) {
 
   // Bottom nozzle
   ctx.fillStyle = grad2;
-  roundRect(t.x - nh2, t.gapY + tubeGap, nozzleW, nozzleH, 5);
+  roundRect(t.x - nh2, t.gapY + gap, nozzleW, nozzleH, 5);
   ctx.fill();
 
   // Bottom tube body
   ctx.fillStyle = grad1;
-  const botY = t.gapY + tubeGap + nozzleH;
+  const botY = t.gapY + gap + nozzleH;
   roundRect(t.x - hw, botY, TUBE_WIDTH, canvas.height - botY + 4, 6);
   ctx.fill();
 
@@ -328,7 +345,7 @@ function drawTube(t) {
   ctx.fillStyle = 'rgba(255,255,255,0.25)';
   ctx.textAlign = 'center';
   ctx.fillText('WASABI', t.x, t.gapY - nozzleH / 2 + 3);
-  ctx.fillText('WASABI', t.x, t.gapY + tubeGap + nozzleH / 2 + 3);
+  ctx.fillText('WASABI', t.x, t.gapY + gap + nozzleH / 2 + 3);
 
   ctx.restore();
 }
@@ -398,15 +415,15 @@ function update() {
   }
 
   if (state === STATE.PLAYING) {
-    mascotVY += GRAVITY;
-    mascotVY  = Math.min(mascotVY, 12);
+    mascotVY += liveGravity();
+    mascotVY  = Math.min(mascotVY, liveVelCap());
     mascotY  += mascotVY;
     updateTubes();
     if (hitTest()) die();
   }
 
   if (state === STATE.DEAD) {
-    mascotVY += GRAVITY;
+    mascotVY += liveGravity();
     mascotY  += mascotVY;
     deathTimer--;
     if (deathTimer <= 0) showGameOver();
