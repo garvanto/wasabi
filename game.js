@@ -30,20 +30,26 @@ const ctx    = canvas.getContext('2d');
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
-  buildStars();
-  if (state === STATE.PLAYING || state === STATE.DEAD) resetGame();
 }
 resize();
-window.addEventListener('resize', resize);
+window.addEventListener('resize', () => {
+  resize();
+  buildStars();
+  if (state === STATE.PLAYING || state === STATE.DEAD) resetGame();
+});
 
 // ── Assets ───────────────────────────────────────────────────────────────────
 const mascotImg = new Image();
 mascotImg.src = 'assets/logo.png';
 
 // ── Supabase ─────────────────────────────────────────────────────────────────
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let sb = null;
+try {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch { /* credentials not configured yet */ }
 
 async function fetchLeaderboard(limit = 10) {
+  if (!sb) return [];
   try {
     const { data } = await sb
       .from('scores')
@@ -55,6 +61,7 @@ async function fetchLeaderboard(limit = 10) {
 }
 
 async function submitScore(username, finalScore) {
+  if (!sb) return false;
   try {
     const { error } = await sb.from('scores').insert({ username: username.trim(), score: finalScore });
     return !error;
@@ -147,8 +154,16 @@ window.addEventListener('keydown', e => {
     handleInput();
   }
 });
-canvas.addEventListener('mousedown',  e => { e.preventDefault(); handleInput(); });
-canvas.addEventListener('touchstart', e => { e.preventDefault(); handleInput(); }, { passive: false });
+document.addEventListener('mousedown', e => {
+  if (e.target.closest('button, input, a')) return;
+  e.preventDefault();
+  handleInput();
+});
+document.addEventListener('touchstart', e => {
+  if (e.target.closest('button, input, a')) return;
+  e.preventDefault();
+  handleInput();
+}, { passive: false });
 
 // ── Game Flow ──────────────────────────────────────────────────────────────────
 function startGame() {
