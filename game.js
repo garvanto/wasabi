@@ -9,6 +9,9 @@ const TUBE_GAP_START  = 170;
 const TUBE_GAP_MIN    = 170;
 const SPEED_START     = 3.0;
 const SPEED_MAX       = 6.0;
+
+// Scale speed to viewport so mobile and desktop feel the same
+function speedScale() { return Math.max(0.55, Math.min(1, canvas.width / 900)); }
 const TUBE_SPACING    = 290;   // px between tube x positions
 const MASCOT_X        = 110;   // fixed horizontal position
 const MASCOT_SIZE     = 52;
@@ -128,7 +131,7 @@ function resetGame() {
   tubes      = [];
   sparks     = [];
   score      = 0;
-  gameSpeed  = SPEED_START;
+  gameSpeed  = SPEED_START * speedScale();
   tubeGap    = TUBE_GAP_START;
   deathTimer = 0;
   shakeX     = 0;
@@ -243,7 +246,7 @@ function updateTubes() {
       hudRank.style.color = heat.color;
       // Ramp difficulty
       const lvl = Math.floor(score / 10);
-      gameSpeed = Math.min(SPEED_MAX, SPEED_START + lvl * 0.38);
+      gameSpeed = Math.min(SPEED_MAX * speedScale(), (SPEED_START + lvl * 0.38) * speedScale());
     }
   }
   tubes = tubes.filter(t => t.x > -TUBE_WIDTH);
