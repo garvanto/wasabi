@@ -2,12 +2,12 @@
 const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
-const GRAVITY         = 0.42;
-const FLAP_FORCE      = -8.5;
+const GRAVITY         = 0.28;
+const FLAP_FORCE      = -7.5;
 const TUBE_WIDTH      = 68;
-const TUBE_GAP_START  = 178;
-const TUBE_GAP_MIN    = 128;
-const SPEED_START     = 2.6;
+const TUBE_GAP_START  = 215;
+const TUBE_GAP_MIN    = 155;
+const SPEED_START     = 2.2;
 const SPEED_MAX       = 5.2;
 const TUBE_SPACING    = 290;   // px between tube x positions
 const MASCOT_X        = 110;   // fixed horizontal position
@@ -161,7 +161,8 @@ document.addEventListener('mousedown', e => {
 });
 document.addEventListener('touchstart', e => {
   if (e.target.closest('button, input, a')) return;
-  e.preventDefault();
+  // Only block scroll during active gameplay — let menus scroll freely
+  if (state === STATE.PLAYING || state === STATE.DEAD) e.preventDefault();
   handleInput();
 }, { passive: false });
 
