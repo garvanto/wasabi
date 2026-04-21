@@ -17,8 +17,8 @@ function liveVelCap()    { return isMobile() ? 11    : 14   * vScale(); }
 const SPEED_START     = 2.6;    // px/frame (mobile uses this; desktop gets +0.4 below)
 const SPEED_MAX       = 5.0;
 const SPEED_RAMP      = 0.28;   // added per 10-point level
-function getSpeedStart() { return isMobile() ? 2.6 : 3.2; }
-function getSpeedMax()   { return isMobile() ? 4.5 : 5.8; }
+function getSpeedStart() { return isMobile() ? 2.34 : 3.2; }
+function getSpeedMax()   { return isMobile() ? 4.05 : 5.8; }
 
 // ── Layout constants ──────────────────────────────────────────────────────────
 const TUBE_WIDTH      = 68;
