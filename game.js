@@ -1,6 +1,6 @@
 // ── Config ──────────────────────────────────────────────────────────────────
-const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL      = 'https://mkahcfdbwtxnhbzftwbv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_ElGr-ThlzqbSP4YLTD3zow_79cloF8j';
 
 const GRAVITY         = 0.28;
 const FLAP_FORCE      = -7.5;
