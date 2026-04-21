@@ -2,35 +2,35 @@
 const SUPABASE_URL      = 'https://mkahcfdbwtxnhbzftwbv.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_ElGr-ThlzqbSP4YLTD3zow_79cloF8j';
 
-// ── Physics base values (calibrated to original Flappy Bird's 288×512 screen) ──
-// Everything scales with vScale() so the game feels identical on any device.
-const GRAVITY_BASE    = 0.50;   // original: ~0.5 px/frame²
-const FLAP_BASE       = -9.0;   // original: −9 px/frame upward impulse
-const SPEED_START     = 3.2;    // px/frame starting pipe speed
-const SPEED_MAX       = 5.8;    // px/frame max pipe speed
+// ── Physics ───────────────────────────────────────────────────────────────────
+// Mobile (touch) uses gentle, unscaled physics — high-velocity arcs are hard to
+// control with finger latency. Desktop scales with viewport height so the arc
+// proportions match the original Flappy Bird on any monitor size.
+function isMobile() { return canvas.width < 600; }
+function vScale()   { return canvas.height / 512; }
+
+function liveGravity()   { return isMobile() ? 0.42  : 0.50 * vScale(); }
+function liveFlapForce() { return isMobile() ? -8.5  : -9.0 * vScale(); }
+function liveVelCap()    { return isMobile() ? 11    : 14   * vScale(); }
+
+// Speed — mobile gets a gentler pace to compensate for touch latency
+const SPEED_START     = 2.6;    // px/frame (mobile uses this; desktop gets +0.4 below)
+const SPEED_MAX       = 5.0;
 const SPEED_RAMP      = 0.28;   // added per 10-point level
+function getSpeedStart() { return isMobile() ? 2.6 : 3.2; }
+function getSpeedMax()   { return isMobile() ? 4.5 : 5.8; }
 
 // ── Layout constants ──────────────────────────────────────────────────────────
-const TUBE_WIDTH      = 68;     // px, same across all viewports
+const TUBE_WIDTH      = 68;
 const DEATH_FRAMES    = 55;
 
-// ── Viewport scaling ──────────────────────────────────────────────────────────
-// vScale() maps any screen height to the original 512 px reference so physics
-// arcs stay the same PROPORTION of the screen on every device.
-function vScale()      { return canvas.height / 512; }
+// Tube gap: 30% of viewport height on mobile (more room for touch), 28% on desktop
+function liveTubeGap()  { return Math.max(160, canvas.height * (isMobile() ? 0.30 : 0.28)); }
 
-// Derived physics (call each frame — canvas size can change on resize/rotate)
-function liveGravity()   { return GRAVITY_BASE * vScale(); }
-function liveFlapForce() { return FLAP_BASE    * vScale(); }
-function liveVelCap()    { return 14 * vScale(); }          // terminal velocity cap
-
-// Tube gap: 28% of viewport height (original: 120/512 = 23%; we give a touch more room)
-function liveTubeGap()  { return Math.max(150, canvas.height * 0.28); }
-
-// Tube spacing: 58% of viewport width (guarantees 2 tubes always visible)
+// Tube spacing: 58% of viewport width — guarantees 2 tubes always in view
 function tubeSpacing()  { return Math.min(canvas.width * 0.58, 340); }
 
-// Mascot: ~8% of viewport height, clamped 52–72 px
+// Mascot: 8% of viewport height, clamped 52–72 px
 function mascotSize()   { return Math.round(Math.min(Math.max(52, canvas.height * 0.08), 72)); }
 
 const MASCOT_X = 110;   // fixed horizontal position (px from left)
@@ -148,7 +148,7 @@ function resetGame() {
   tubes      = [];
   sparks     = [];
   score      = 0;
-  gameSpeed  = SPEED_START;
+  gameSpeed  = getSpeedStart();
   deathTimer = 0;
   shakeX     = 0;
   shakeY     = 0;
@@ -263,7 +263,7 @@ function updateTubes() {
       hudRank.style.color = heat.color;
       // Mild speed ramp — every 10 points
       const lvl = Math.floor(score / 10);
-      gameSpeed = Math.min(SPEED_MAX, SPEED_START + lvl * SPEED_RAMP);
+      gameSpeed = Math.min(getSpeedMax(), getSpeedStart() + lvl * SPEED_RAMP);
     }
   }
   tubes = tubes.filter(t => t.x > -TUBE_WIDTH);
