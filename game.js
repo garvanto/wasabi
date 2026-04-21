@@ -30,6 +30,8 @@ const ctx    = canvas.getContext('2d');
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
+  buildStars();
+  if (state === STATE.PLAYING || state === STATE.DEAD) resetGame();
 }
 resize();
 window.addEventListener('resize', resize);
@@ -52,9 +54,9 @@ async function fetchLeaderboard(limit = 10) {
   } catch { return []; }
 }
 
-async function submitScore(username, score) {
+async function submitScore(username, finalScore) {
   try {
-    const { error } = await sb.from('scores').insert({ username: username.trim(), score });
+    const { error } = await sb.from('scores').insert({ username: username.trim(), score: finalScore });
     return !error;
   } catch { return false; }
 }
@@ -63,7 +65,9 @@ function escHtml(s) {
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function renderLeaderboard(id, rows) {
@@ -332,6 +336,16 @@ function drawBg() {
   ctx.fillStyle = '#080808';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Background stars
+  for (const s of bgStars) {
+    ctx.globalAlpha = s.a;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
   // Subtle ground line
   ctx.fillStyle = 'rgba(111,255,0,0.06)';
   ctx.fillRect(0, canvas.height - 3, canvas.width, 3);
@@ -412,7 +426,7 @@ document.getElementById('btn-share').addEventListener('click', () => {
   const text = encodeURIComponent(
     `I scored ${score} Scoville units at ${heat.label} heat in Flappy Wasabi! Can you beat me? wasabicheese.com/game $WASABI`
   );
-  window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+  window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
 });
 
 document.getElementById('btn-submit').addEventListener('click', async () => {
