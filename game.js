@@ -9,16 +9,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_ElGr-ThlzqbSP4YLTD3zow_79cloF8j';
 function isMobile() { return canvas.width < 600; }
 function vScale()   { return canvas.height / 512; }
 
-function liveGravity()   { return isMobile() ? 0.42  : 0.50 * vScale(); }
+function liveGravity()   { return isMobile() ? 0.378 : 0.50 * vScale(); }
 function liveFlapForce() { return isMobile() ? -8.5  : -9.0 * vScale(); }
-function liveVelCap()    { return isMobile() ? 11    : 14   * vScale(); }
+function liveVelCap()    { return isMobile() ? 9.9   : 14   * vScale(); }
 
 // Speed — mobile gets a gentler pace to compensate for touch latency
 const SPEED_START     = 2.6;    // px/frame (mobile uses this; desktop gets +0.4 below)
 const SPEED_MAX       = 5.0;
 const SPEED_RAMP      = 0.28;   // added per 10-point level
-function getSpeedStart() { return isMobile() ? 2.34 : 3.2; }
-function getSpeedMax()   { return isMobile() ? 4.05 : 5.8; }
+function getSpeedStart() { return isMobile() ? 2.11 : 3.2; }
+function getSpeedMax()   { return isMobile() ? 3.65 : 5.8; }
 
 // ── Layout constants ──────────────────────────────────────────────────────────
 const TUBE_WIDTH      = 68;
