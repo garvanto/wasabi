@@ -12,9 +12,11 @@ const SPEED_MAX       = 5.2;
 
 // Scale speed to viewport so mobile and desktop feel the same
 function speedScale() { return Math.max(0.55, Math.min(1, canvas.width / 900)); }
-const TUBE_SPACING    = 290;   // px between tube x positions
+// Keep 2 tubes always visible — spacing capped to 55% of viewport width
+function tubeSpacing() { return Math.min(290, canvas.width * 0.55); }
 const MASCOT_X        = 110;   // fixed horizontal position
-const MASCOT_SIZE     = 52;
+// Mascot bigger on small screens for visibility
+function mascotSize() { return canvas.width < 500 ? 68 : 52; }
 const DEATH_FRAMES    = 55;
 
 const HEAT_RANKS = [
@@ -231,7 +233,7 @@ function spawnTube() {
 }
 
 function updateTubes() {
-  if (!tubes.length || canvas.width - tubes[tubes.length - 1].x > TUBE_SPACING) {
+  if (!tubes.length || canvas.width - tubes[tubes.length - 1].x > tubeSpacing()) {
     spawnTube();
   }
   for (const t of tubes) {
@@ -254,7 +256,7 @@ function updateTubes() {
 
 // ── Collision ─────────────────────────────────────────────────────────────────
 function hitTest() {
-  const r = MASCOT_SIZE / 2 - 9;
+  const r = mascotSize() / 2 - 9;
   if (mascotY - r < 0 || mascotY + r > canvas.height) return true;
   for (const t of tubes) {
     if (Math.abs(t.x - MASCOT_X) < TUBE_WIDTH / 2 + r - 6) {
@@ -339,11 +341,11 @@ function drawMascot(y) {
   ctx.shadowBlur  = 22;
   ctx.shadowColor = '#6FFF00';
   if (mascotImg.complete && mascotImg.naturalWidth) {
-    ctx.drawImage(mascotImg, -MASCOT_SIZE / 2, -MASCOT_SIZE / 2, MASCOT_SIZE, MASCOT_SIZE);
+    ctx.drawImage(mascotImg, -mascotSize() / 2, -mascotSize() / 2, mascotSize(), mascotSize());
   } else {
     // Fallback circle
     ctx.beginPath();
-    ctx.arc(0, 0, MASCOT_SIZE / 2, 0, Math.PI * 2);
+    ctx.arc(0, 0, mascotSize() / 2, 0, Math.PI * 2);
     ctx.fillStyle = '#6FFF00';
     ctx.fill();
   }
