@@ -2,12 +2,12 @@
 const SUPABASE_URL      = 'https://mkahcfdbwtxnhbzftwbv.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_ElGr-ThlzqbSP4YLTD3zow_79cloF8j';
 
-const GRAVITY         = 0.36;
-const FLAP_FORCE      = -8.2;
+const GRAVITY         = 0.28;
+const FLAP_FORCE      = -7.5;
 const TUBE_WIDTH      = 68;
-const TUBE_GAP_START  = 195;
-const TUBE_GAP_MIN    = 145;
-const SPEED_START     = 2.5;
+const TUBE_GAP_START  = 215;
+const TUBE_GAP_MIN    = 155;
+const SPEED_START     = 2.2;
 const SPEED_MAX       = 5.2;
 const TUBE_SPACING    = 290;   // px between tube x positions
 const MASCOT_X        = 110;   // fixed horizontal position
