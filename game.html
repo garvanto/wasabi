@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Flappy Wasabi — $WASABI</title>
+  <meta name="description" content="Play Flappy Wasabi — the spiciest browser game on Solana." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- START SCREEN -->
+  <div id="screen-start" class="screen">
+    <div class="screen-inner">
+      <img src="assets/logo.png" alt="Wasabi" class="title-logo" />
+      <h1 class="game-title">FLAPPY<br/>WASABI</h1>
+      <p class="tap-hint">TAP TO START</p>
+      <div class="lb-wrap">
+        <div class="lb-header">TOP SCORES</div>
+        <div id="lb-start" class="leaderboard"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="screen-gameover" class="screen hidden">
+    <div class="screen-inner">
+      <div id="go-rank" class="go-rank">MILD</div>
+      <div id="go-score" class="go-score">0 SCOVILLE</div>
+      <input
+        id="username-input"
+        class="username-input"
+        type="text"
+        maxlength="20"
+        placeholder="ENTER YOUR NAME"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="go-buttons">
+        <button id="btn-share" class="go-btn go-btn-share">SHARE ON X</button>
+        <button id="btn-submit" class="go-btn go-btn-submit">SUBMIT SCORE</button>
+      </div>
+      <div id="submit-status" class="submit-status"></div>
+      <div class="lb-wrap">
+        <div class="lb-header">LEADERBOARD</div>
+        <div id="lb-gameover" class="leaderboard"></div>
+      </div>
+      <button id="btn-retry" class="go-btn go-btn-retry">PLAY AGAIN</button>
+      <a href="/" class="back-link">BACK TO SITE</a>
+    </div>
+  </div>
+
+  <!-- HUD (during play) -->
+  <div id="hud" class="hidden">
+    <div id="hud-score" class="hud-score">0</div>
+    <div id="hud-rank" class="hud-rank" style="color:#6FFF00">MILD</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="game.js"></script>
+</body>
+</html>
