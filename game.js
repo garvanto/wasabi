@@ -244,7 +244,6 @@ function updateTubes() {
       // Ramp difficulty
       const lvl = Math.floor(score / 10);
       gameSpeed = Math.min(SPEED_MAX, SPEED_START + lvl * 0.38);
-      tubeGap   = Math.max(TUBE_GAP_MIN, TUBE_GAP_START - lvl * 7);
     }
   }
   tubes = tubes.filter(t => t.x > -TUBE_WIDTH);
