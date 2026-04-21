@@ -338,6 +338,7 @@ body {
   color: var(--gold);
   border-color: var(--gold);
 }
+
 .btn-play:hover {
   background: var(--gold);
   color: #000;
