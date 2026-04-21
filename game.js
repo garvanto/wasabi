@@ -27,8 +27,8 @@ const DEATH_FRAMES    = 55;
 // Tube gap: 30% of viewport height on mobile (more room for touch), 28% on desktop
 function liveTubeGap()  { return Math.max(160, canvas.height * (isMobile() ? 0.30 : 0.28)); }
 
-// Tube spacing: 58% of viewport width — guarantees 2 tubes always in view
-function tubeSpacing()  { return Math.min(canvas.width * 0.58, 340); }
+// Tube spacing: mobile gets 20% more breathing room between pairs
+function tubeSpacing()  { return isMobile() ? canvas.width * 0.70 : Math.min(canvas.width * 0.58, 340); }
 
 // Mascot: 8% of viewport height, clamped 52–72 px
 function mascotSize()   { return Math.round(Math.min(Math.max(52, canvas.height * 0.08), 72)); }
