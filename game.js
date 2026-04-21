@@ -7,8 +7,8 @@ const FLAP_FORCE      = -8.5;
 const TUBE_WIDTH      = 68;
 const TUBE_GAP_START  = 170;
 const TUBE_GAP_MIN    = 170;
-const SPEED_START     = 3.0;
-const SPEED_MAX       = 6.0;
+const SPEED_START     = 2.2;
+const SPEED_MAX       = 5.2;
 
 // Scale speed to viewport so mobile and desktop feel the same
 function speedScale() { return Math.max(0.55, Math.min(1, canvas.width / 900)); }
